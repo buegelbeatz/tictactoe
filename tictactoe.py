@@ -2,9 +2,7 @@ import re
 
 
 class Player:
-    COLOR_RED = "\u001b[31m"
-    COLOR_GREEN = "\u001b[32m"
-    COLOR_RESET = "\u001b[0m"
+    COLOR_RED, COLOR_GREEN, COLOR_RESET = "\u001b[31m", "\u001b[32m", "\u001b[0m"
 
     def __init__(self, char=" "):
         self.char = char
@@ -45,12 +43,11 @@ class Board:
 class Game:
     INPUT_REGEXP = r"^ *([0-2]) *([0-2]) *$"
 
-    def __init__(self, start='X', player_class=Player, board_class=Board):
-        self.players = []
-        self.player_index = 0
-        self.players.append(player_class(start))
-        self.players.append(player_class('O' if start == 'X' else 'X'))
-        self.board = board_class()
+    def __init__(self, start='X'):
+        self.players, self.player_index = [], 0
+        self.players.append(Player(start))
+        self.players.append(Player('O' if start == 'X' else 'X'))
+        self.board = Board()
 
     def _toggle_user(self):
         self.player_index = 0 if self.player_index == 1 else 1
@@ -81,8 +78,7 @@ class Game:
 
 
 def main():
-    game = Game()
-    winner = False
+    game, winner = Game(), False
     while winner is False:
         next_player, winner = game.manual_move()
     print(game.board)
