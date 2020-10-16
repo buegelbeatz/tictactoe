@@ -50,7 +50,7 @@ class Game:
         self.board = Board()
 
     def _toggle_user(self):
-        self.player_index = 0 if self.player_index == 1 else 1
+        self.player_index = abs(self.player_index - 1)
 
     def _current_player(self):
         return self.players[self.player_index]
