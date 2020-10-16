@@ -49,9 +49,6 @@ class Game:
         self.players.append(Player('O' if start == 'X' else 'X'))
         self.board = Board()
 
-    def _toggle_user(self):
-        self.player_index = abs(self.player_index - 1)
-
     def _current_player(self):
         return self.players[self.player_index]
 
@@ -61,7 +58,7 @@ class Game:
             if finished:
                 return None, winner
             else:
-                self._toggle_user()
+                self.player_index = abs(self.player_index - 1)
             return self._current_player(), winner
         return False, False
 
