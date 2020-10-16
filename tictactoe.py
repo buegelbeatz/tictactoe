@@ -21,19 +21,16 @@ class Board:
     def __init__(self, key=START_KEY):
         self.key = key
 
-    def _verify(self):
-        if re.match(Board.CROSS_WINS_REGEXP, self.key):
-            return True, Player('X')
-        if re.match(Board.CIRCLE_WINS_REGEXP, self.key):
-            return True, Player('O')
-        if re.match(Board.NO_ONE_WINS_REGEXP, self.key):
-            return True, None
-        return False, False
-
     def add(self, player, index):
         if self.key[index] == " ":
             self.key = self.key[:index] + player.char + self.key[index + 1:]
-            return (True,) + self._verify()
+            if re.match(Board.CROSS_WINS_REGEXP, self.key):
+                return True, True, Player('X')
+            if re.match(Board.CIRCLE_WINS_REGEXP, self.key):
+                return True, True, Player('O')
+            if re.match(Board.NO_ONE_WINS_REGEXP, self.key):
+                return True, True, None
+            return True, False, False
         return False, False, False
 
     def __str__(self):
