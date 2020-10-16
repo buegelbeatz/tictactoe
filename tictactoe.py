@@ -62,17 +62,18 @@ class Game:
                 return None, winner
             else:
                 self._toggle_user()
-        return self._current_player(), winner
+            return self._current_player(), winner
+        return False, False
 
     def manual_move(self):
         print("{}\nplayer '{}' please move now. (f.e. '01' for column 0 and row 1): ".format(self.board, self._current_player()), end='')
         match = re.search(Game.INPUT_REGEXP, str(input()))
         if not match:
-            print("please enter 2 numbers between 0-2")
+            print("\nplease enter 2 numbers between 0-2")
             return self._current_player(), False
         next_player, winner = self.move(int(match.group(1)) + 3 * int(match.group(2)))
         if not next_player and winner is False:
-            print("please choose an empty cell.")
+            print("\nplease choose an empty cell.")
             return self._current_player(), False
         return next_player, winner
 
