@@ -22,16 +22,16 @@ class Board:
         self.key = key
 
     def add(self, player, index):
-        if self.key[index] == " ":
-            self.key = self.key[:index] + player.char + self.key[index + 1:]
-            if re.match(Board.CROSS_WINS_REGEXP, self.key):
-                return True, True, Player('X')
-            if re.match(Board.CIRCLE_WINS_REGEXP, self.key):
-                return True, True, Player('O')
-            if re.match(Board.NO_ONE_WINS_REGEXP, self.key):
-                return True, True, None
-            return True, False, False
-        return False, False, False
+        if self.key[index] != " ":
+            return False, False
+        self.key = self.key[:index] + player.char + self.key[index + 1:]
+        if re.match(Board.CROSS_WINS_REGEXP, self.key):
+            return True, Player('X')
+        if re.match(Board.CIRCLE_WINS_REGEXP, self.key):
+            return True, Player('O')
+        if re.match(Board.NO_ONE_WINS_REGEXP, self.key):
+            return True, None
+        return True, False
 
     def __str__(self):
         return Board.VISUALIZE.format(*[str(Player(x)) for x in self.key])
@@ -42,45 +42,37 @@ class Game:
 
     def __init__(self, start='X'):
         self.players, self.player_index = [], 0
-        self.players.append(Player(start))
-        self.players.append(Player('O' if start == 'X' else 'X'))
+        self.players.extend([Player(start), Player('O' if start == 'X' else 'X')])
         self.board = Board()
 
     def _current_player(self):
         return self.players[self.player_index]
 
     def move(self, index):
-        done, finished, winner = self.board.add(self._current_player(), index)
-        if done:
-            if finished:
-                return None, winner
-            else:
-                self.player_index = abs(self.player_index - 1)
-            return self._current_player(), winner
-        return False, False
+        done, winner = self.board.add(self._current_player(), index)
+        if done and winner:
+            return None, winner
+        if not done:
+            return False, False
+        self.player_index = abs(self.player_index - 1)
+        return self._current_player(), winner
 
     def manual_move(self):
         print("{}\nplayer '{}' please move now. (f.e. '01' for column 0 and row 1): ".format(self.board, self._current_player()), end='')
         match = re.search(Game.INPUT_REGEXP, str(input()))
         if not match:
             print("\nplease enter 2 numbers between 0-2")
-            return self._current_player(), False
+            return False
         next_player, winner = self.move(int(match.group(1)) + 3 * int(match.group(2)))
-        if not next_player and winner is False:
-            print("\nplease choose an empty cell.")
-            return self._current_player(), False
-        return next_player, winner
+        print("\nplease choose an empty cell." if not next_player and winner is False else "")
+        return winner
 
 
 def main():
     game, winner = Game(), False
     while winner is False:
-        next_player, winner = game.manual_move()
-    print(game.board)
-    if winner is None:
-        print("No one wins!\n")
-    else:
-        print(f"the winner is player '{winner}'!\n")
+        winner = game.manual_move()
+    print(game.board, "No one wins!\n" if winner is None else f"the winner is player '{winner}'!\n")
 
 
 if __name__ == "__main__":
