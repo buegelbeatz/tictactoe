@@ -41,9 +41,7 @@ class Game:
     INPUT_REGEXP = r"^ *([0-2]) *([0-2]) *$"
 
     def __init__(self, start='X'):
-        self.players, self.player_index = [], 0
-        self.players.extend([Player(start), Player('O' if start == 'X' else 'X')])
-        self.board = Board()
+        self.players, self.player_index, self.board = [Player(start), Player('O' if start == 'X' else 'X')], 0, Board()
 
     def _current_player(self):
         return self.players[self.player_index]
