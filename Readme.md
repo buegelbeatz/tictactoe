@@ -9,13 +9,7 @@ python3 ./train.py
 ```
 This generates a file './tictactoe_recommended_mapping_3.json' which is used by the **TrainedPlayer** as recommendation.
 
-Just run
-
-```bash
-python3 ./tictactoe.py
-```
-
-#### Training a player
+#### Playing
 
 Just run
 
